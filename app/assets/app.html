@@ -1,0 +1,144 @@
+<app>
+    <section class="controls">
+        <label for="contextual">Contextual URL:</label>
+        <input id="contextual" type="text" value="{ contextual }" onkeyup={ update }/>
+        <button onclick={ refresh }>Refresh</button>
+    </section>
+
+    <section class="preview"></section>
+
+    <script>
+        var self = this;
+
+        if ( !(self.contextual = localStorage.getItem('contextual')) ) {
+            self.contextual = 'https://en.wikipedia.org/wiki/Tom_Cruise';
+            localStorage.setItem('contextual', self.contextual);
+        }
+
+        self.on('mount', function () {
+            this.refresh();
+        });
+
+        self.refresh = function () {
+            localStorage.setItem('contextual', self.contextual);
+            var container = self.root.querySelector('.preview');
+            this.initWidget(container, self.contextual, getDefaultConfig());
+        };
+
+        self.update = function (e) {
+            self.contextual = e.target.value;
+        };
+
+        self.initWidget = function (container, contextual, config) {
+            var script = document.createElement('script');
+            var configId = nextId();
+
+            container.innerHTML = '';
+
+            storeConfig(configId, config);
+
+            script.setAttribute('async', 'true');
+            script.setAttribute('src', 'https://inhabit-widget-service-dev.azurewebsites.net/Widget/v1');
+            script.setAttribute('data-ark-configuration', '__ark_app__:' + configId);
+            script.setAttribute('data-ark-contextual-url', contextual);
+            container.appendChild(script);
+        };
+
+        self.connect = function () {
+            var connection = new WebSocket('ws://' + window.location.hostname + ':9485');
+            connection.onmessage = self.refresh;
+        };
+
+        function nextId(id) {
+            var id = id || 0;
+            if (!window.__ark_app__) {
+                window.__ark_app__ = {};
+            }
+            if (!window.__ark_app__.configurations) {
+                window.__ark_app__.configurations = {};
+            }
+            if (!window.__ark_app__.configurations[id]) {
+                return id;
+            } else {
+                id += 1;
+                return nextId(id);
+            }
+        }
+
+        function storeConfig(id, config) {
+            window.__ark_app__.configurations[id] = config;
+        }
+
+        function getDefaultConfig() {
+            return [
+                {
+                    "id": "ModuleManager",
+                    "cfg": {
+                        "cdn": "."
+                    }
+                },
+                {
+                    "id": "application",
+                    "cfg": {
+                        "cssUrl": [ '../' ],
+                        "cacheTimeSec": "300",
+                        "cdnUrl": ""
+                    }
+                },
+                {
+                    "id": "textClassificationService",
+                    "cfg": {
+                        "providers": [
+                            {
+                                "id": "alchemy",
+                                "url": "//semantic-inhabit.as.arkadiumhosted.com/api/alchemy",
+                                "prefetchMethods": []
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "widget",
+                    "cfg": [
+                        {
+                            "id": "widget",
+                            "cfg": {
+                                "title": "test",
+                                "logoVisibility": "collapse",
+                                "headerVisibility": false,
+                                "presenter": "contentPresenter",
+                                "rulesGroup": "inWidget"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "contentPresenter",
+                    "cfg": [
+                        {
+                            "id": "inWidget",
+                            "cfg": {
+                                "modules": [
+                                    {
+                                        "id": "my-module"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ];
+        }
+    </script>
+
+    <style>
+        .controls {
+            display: flex;
+        }
+
+        .controls input {
+            flex: 1;
+            margin: 0 2em;
+        }
+    </style>
+</app>

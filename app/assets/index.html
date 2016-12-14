@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Interactive Dev Page</title>
+    <!-- Required meta tags always come first -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <!-- Bass CSS -->
+    <link href="https://unpkg.com/basscss@8.0.2/css/basscss.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Bungee|Ubuntu" rel="stylesheet">
+    <style>
+      h1, h2, h3 {
+        font-family: Bungee, sans-serif;
+      }
+      body {
+        font-family: Ubuntu, sans-serif;
+      }
+    </style>
+  </head>
+  <body id="app">
+    <div class="md-col-8 mx-auto px1 border rounded">
+      <h1 class="caps justify" style="font-family: Bungee">InHabit</h1>
+      <p class="italic">This is a simple page to preview your interactive.</p>
+      <hr/>
+      <app></app>
+    </div>
+    <script src="https://unpkg.com/riot@3.0.1/riot%2Bcompiler.min.js"></script>
+    <script type="riot/tag" src="./app.html"></script>
+    <script type="text/javascript">
+      /* globals riot */
+      riot.mount('*')
+    </script>
+  </body>
+</html>
