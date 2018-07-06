@@ -1,5 +1,7 @@
 # Brunch + Babel/ES6
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/rand0me/brunch-inhabit-module-phaser.svg)](https://greenkeeper.io/)
+
 This is a modern JS skeleton for [Brunch](http://brunch.io).
 
 ## Installation
